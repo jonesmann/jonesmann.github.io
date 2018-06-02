@@ -5,19 +5,22 @@
   
 
   
-  <title>Go interface | jingjun</title>
+  <title>Go interface | 星辰大海</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="keywords" content="Python, Go">
+  <meta name="description" content="in wikipied what is interfacecommunicate unrelated object Gopher china 基本概念abtract typesconcrete type memory layoutbehavior attacherd to data through methods describle behavior the define a set of met">
+<meta name="keywords" content="Python, Go">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go interface">
 <meta property="og:url" content="http://yoursite.com/2018/05/01/Go-interface/index.html">
-<meta property="og:site_name" content="jingjun">
+<meta property="og:site_name" content="星辰大海">
+<meta property="og:description" content="in wikipied what is interfacecommunicate unrelated object Gopher china 基本概念abtract typesconcrete type memory layoutbehavior attacherd to data through methods describle behavior the define a set of met">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-05-01T11:02:57.514Z">
+<meta property="og:updated_time" content="2018-05-06T13:39:56.387Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go interface">
+<meta name="twitter:description" content="in wikipied what is interfacecommunicate unrelated object Gopher china 基本概念abtract typesconcrete type memory layoutbehavior attacherd to data through methods describle behavior the define a set of met">
   
-    <link rel="alternate" href="/atom.xml" title="jingjun" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="星辰大海" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -36,7 +39,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">jingjun</a>
+        <a href="/" id="logo">星辰大海</a>
       </h1>
       
     </div>
@@ -84,11 +87,37 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>in wikipied what is interface<br>communicate unrelated object</p>
+<p>Gopher china</p>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>abtract types<br>concrete type</p>
+<p>memory layout<br>behavior attacherd to data through methods</p>
+<p>describle behavior</p>
+<p>the define a set of methods,withour specifi  revi</p>
+<p>abstratatrion</p>
+<p>union of interface<br>two style</p>
+<p>Go proverbs</p>
+<p>why do we use interface</p>
+<p>writ generic algorit<br>hindin details<br>providing interceprion points</p>
+<p>func Writer</p>
+<p>the bigger the interface the weaker the abstration</p>
+<p>be conservative in waht you be ,be liberak ub waht you accept<br>TCP<br>  call dispatch</p>
+<p>Abstract Data Types</p>
+<p>Mathmaticak model for data tyoe<br>defined </p>
+<p>Go中的接口（interface）不描述数据，它只描述行为，它指定了一个类型（Type）的行为。定义一个interface,使用关键字type和interface,</p>
+<p><code>type Write interface{
+    write([]byte) (int, error)
+}</code></p>
+<p>Type ConsoleWriter struct {}<br>和其他语言不同，Go不提供显示implement接口的关键字，而是通过给ConsoleWriter类型绑定一个和接口一样签名的方法来隐式的impelement接口。</p>
+<pre><code>func (cw ConsoleWriter) Write (data []byte) (int, error){
+    n,err:==fmt.println(string(data))
+    return n,err
+</code></pre><p>}</p>
+<p>命名规则，</p>
+<h1 id="composing-interfaces"><a href="#composing-interfaces" class="headerlink" title="composing interfaces"></a>composing interfaces</h1><h1 id="type-conversion"><a href="#type-conversion" class="headerlink" title="type conversion"></a>type conversion</h1><h2 id="the-empty-interface"><a href="#the-empty-interface" class="headerlink" title="the empty interface"></a>the empty interface</h2><h2 id="type-switches"><a href="#type-switches" class="headerlink" title="type switches"></a>type switches</h2><h1 id="implementing-with-values-vs-pointers"><a href="#implementing-with-values-vs-pointers" class="headerlink" title="implementing with values vs .pointers"></a>implementing with values vs .pointers</h1><h1 id="best-prcatices"><a href="#best-prcatices" class="headerlink" title="best prcatices"></a>best prcatices</h1>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/05/01/Go-interface/" data-id="cjgnkds2d0000kws6h80dh3q8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/05/01/Go-interface/" data-id="cjhx6bef50000tcs67uzsekou" class="article-share-link">Share</a>
       
       
     </footer>
@@ -96,6 +125,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2018/06/02/GO语言NonBlock-channel使用/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          GO语言NonBlock channel使用
+        
+      </div>
+    </a>
   
   
     <a href="/2018/05/01/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
@@ -124,7 +162,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
     </div>
   </div>
 
@@ -135,6 +173,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/06/02/GO语言NonBlock-channel使用/">GO语言NonBlock channel使用</a>
+          </li>
         
           <li>
             <a href="/2018/05/01/Go-interface/">Go interface</a>
