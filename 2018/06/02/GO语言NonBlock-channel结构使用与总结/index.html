@@ -56,32 +56,32 @@
             <li >
                 <a href="/">
                     <i class="iconfont icon-shouye1"></i>
-                    <span>主页</span>
+                    <span>HOME</span>
                 </a>
             </li>
             <li >
                 <a href="/tags">
                     <i class="iconfont icon-biaoqian1"></i>
-                    <span>标签</span>
+                    <span>TAGS</span>
                 </a>
             </li>
             <li >
                 <a href="/archives">
                     <i class="iconfont icon-guidang2"></i>
-                    <span>存档</span>
+                    <span>ARCHIVES</span>
                 </a>
             </li>
             <li >
                 <a href="/about/">
                     <i class="iconfont icon-guanyu2"></i>
-                    <span>关于</span>
+                    <span>ABOUT</span>
                 </a>
             </li>
             
             <li>
                 <a id="search">
                     <i class="iconfont icon-sousuo1"></i>
-                    <span>搜索</span>
+                    <span>SEARCH</span>
                 </a>
             </li>
             
@@ -100,7 +100,7 @@
         <div class="search-input">
             <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
             <input id="search-input"/>
-            <span id="begin-search">搜索</span>
+            <span id="begin-search">search</span>
         </div>
         <div class="search-result-container" id="search-result-container">
 
@@ -123,17 +123,18 @@
     </div>
 
     <div class="post-meta">
-        <span class="attr">发布于：<span>2018-06-02 19:08:35</span></span>
+        <span class="attr">Post：<span>2018-06-02 19:08:35</span></span>
         
         </span>
-        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+        <span class="attr">Visit：<span id="busuanzi_value_page_pv"></span>
 </span>
 </span>
     </div>
     <div class="post-content ">
         <p>最近在阅读一个项目的Go源码，发现一个很实用的Go channel结构，它可以实现非阻塞的更新channel里面的内容，非常适用一些特定的场景。</p>
 <p>首先简单介绍一下背景。为了便于描述，将程序抽象成为三个模块，分别为：主模块，模块一，模块二。<br><img src="/2018/06/02/GO语言NonBlock-channel结构使用与总结/go_channel.png" title="图1：模块关系"><br>它们三者之间的关系如上图所示：模块一需要不断的将传输的进度信息更新到主模块，主模块将进度信息分别显示到界面和更新到模块二，模块二收到进度信息后，进度信息在通过网络传给该网络中的其他节点。为了实现这个功能，很容易想到使用Go语言的channel来传递进度信息，然而，如果直接使用channel结构，就需要在每个模块对进度信息的更新进行同步，比较繁琐。</p>
-<p>在源码中使用了一个非阻塞的channel结构来更新进度信息。结构如下：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> NonBlock <span class="keyword">struct</span>&#123;</span><br><span class="line">	cin <span class="keyword">chan</span> <span class="keyword">string</span></span><br><span class="line">	cou <span class="keyword">chan</span> <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewNonBlock</span><span class="params">()</span>*<span class="title">NonBlock</span></span>&#123;</span><br><span class="line">	nbc := NonBlock&#123;<span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>), <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>)&#125;</span><br><span class="line">	<span class="keyword">var</span> v <span class="keyword">string</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">for</span>&#123;</span><br><span class="line">			<span class="keyword">select</span>&#123;</span><br><span class="line">				<span class="keyword">case</span> v = &lt;- nbc.cin:</span><br><span class="line">				<span class="keyword">case</span> nbc.cou &lt;- v: </span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> &amp;nbc</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(nbc *NonBlock)</span><span class="title">Send</span><span class="params">(v <span class="keyword">string</span>)</span></span>&#123;</span><br><span class="line">	nbc.cin &lt;- v</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(nbc *NonBlock)</span><span class="title">Recieve</span><span class="params">()</span><span class="title">string</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> &lt;-nbc.cou</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>在<code>NonBlock</code>结构中使用了两个无缓冲的channel,分别负责进度信息的写入和读出。并且提供<code>Send()</code>和<code>Recieve()</code>方法，通过这两个方法向channel中写入进度信息。这个结构最关键的部分就在于初始化NonBlock结构的方法，在初始化方法中，开启了一个goroutine来不断的将写入到<code>cin</code>channel中的进度信息读出，这样一方面可以防止外部在写入进度信息时阻塞，因为这是一个无缓冲的channel。另一方面，当有外部程序调用<code>Recieve()</code>方法读取进度信息时，从<code>cin</code>读出的信息又被立即写到<code>cou</code>中，供外部读取。同样，外部读取数据也可以实现非阻塞，即使是在一开始就读取进度信息，初始化中的goroutine也可以把一个空的<code>v</code>写入到<code>cou</code>中。</p>
+<p>在源码中使用了一个非阻塞的channel结构来更新进度信息。结构如下：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> NonBlock <span class="keyword">struct</span>&#123;</span><br><span class="line">	cin <span class="keyword">chan</span> <span class="keyword">string</span></span><br><span class="line">	cou <span class="keyword">chan</span> <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewNonBlock</span><span class="params">()</span>*<span class="title">NonBlock</span></span>&#123;</span><br><span class="line">	nbc := NonBlock&#123;<span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>), <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>)&#125;</span><br><span class="line">	<span class="keyword">var</span> v <span class="keyword">string</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">for</span>&#123;</span><br><span class="line">			<span class="keyword">select</span>&#123;</span><br><span class="line">				<span class="keyword">case</span> v = &lt;- nbc.cin:</span><br><span class="line">				<span class="keyword">case</span> nbc.cou &lt;- v: </span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> &amp;nbc</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(nbc *NonBlock)</span><span class="title">Send</span><span class="params">(v <span class="keyword">string</span>)</span></span>&#123;</span><br><span class="line">	nbc.cin &lt;- v</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(nbc *NonBlock)</span><span class="title">Recieve</span><span class="params">()</span><span class="title">string</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> &lt;-nbc.cou</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在<code>NonBlock</code>结构中使用了两个无缓冲的channel,分别负责进度信息的写入和读出。并且提供<code>Send()</code>和<code>Recieve()</code>方法，通过这两个方法向channel中写入进度信息。这个结构最关键的部分就在于初始化NonBlock结构的方法，在初始化方法中，开启了一个goroutine来不断的将写入到<code>cin</code>channel中的进度信息读出，这样一方面可以防止外部在写入进度信息时阻塞，因为这是一个无缓冲的channel。另一方面，当有外部程序调用<code>Recieve()</code>方法读取进度信息时，从<code>cin</code>读出的信息又被立即写到<code>cou</code>中，供外部读取。同样，外部读取数据也可以实现非阻塞，即使是在一开始就读取进度信息，初始化中的goroutine也可以把一个空的<code>v</code>写入到<code>cou</code>中。</p>
 <p>读到这里，你应该明白前面说的这种结构适用与一些特定的场景是什么意思了。假设，外部不断有进度信息写入而没有进行读出操作，那么这样就会造成变量<code>v</code>的数值不断的进行刷新，此时外部再过来读取进度的时候只能读取到最新的进度信息。然而，这个特性对本文的这个应用场景并没有影响，因为进度信息本来就需要最新的。可以简单的写个程序验证一下：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	nbc := NewNonBlock()</span><br><span class="line">	stopflag := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">bool</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">for</span> i:=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++&#123;</span><br><span class="line">			nbc.Send(fmt.Sprint(i))</span><br><span class="line">		&#125;</span><br><span class="line">		stopflag &lt;- <span class="literal">true</span></span><br><span class="line">	&#125;()</span><br><span class="line">	&lt;- stopflag</span><br><span class="line">	fmt.Println(<span class="string">"Recieve value"</span> nbc.Recieve())	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>程序最终输出：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Recieve value  <span class="number">9</span></span><br></pre></td></tr></table></figure></p>
 
         
