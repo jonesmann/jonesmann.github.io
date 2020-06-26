@@ -89,7 +89,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-text">基本概念</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#命名规则"><span class="toc-text">命名规则</span></a></li></ol>
 </div>
     
 </div>
@@ -142,13 +142,9 @@
 <p><a href="https://en.wikipedia.org/wiki/Interface_(computing" target="_blank" rel="noopener">communicate unrelated object</a>)</p>
 </blockquote>
 <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>抽象数据类型（abtract types）</p>
-<blockquote>
-<p>to be continue…</p>
-</blockquote>
+<p>  to be continue…</p>
 <p>实体类型（concrete type）</p>
-<blockquote>
-<p>to be continue…</p>
-</blockquote>
+<p>  to be continue…</p>
 <p>为什么使用interface</p>
 <ul>
 <li>writ generic algorit</li>
@@ -159,15 +155,8 @@
 <p><code>type Write interface{
     write([]byte) (int, error)
 }</code></p>
-<p>Type ConsoleWriter struct {}<br>和其他语言不同，Go不提供显示implement接口的关键字，而是通过给ConsoleWriter类型绑定一个和接口一样签名的方法来隐式的impelement接口。</p>
-<pre><code>func (cw ConsoleWriter) Write (data []byte) (int, error){
-    n,err:==fmt.println(string(data))
-    return n,err
-</code></pre><p>}</p>
-<p>命名规则</p>
-<blockquote>
-<p>to be cotinue…</p>
-</blockquote>
+<p>Type ConsoleWriter struct {}<br>和其他语言不同，Go不提供显示implement接口的关键字，而是通过给ConsoleWriter类型绑定一个和接口一样签名的方法来隐式的impelement接口。<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">func</span> <span class="params">(cw ConsoleWriter)</span> <span class="title">Write</span> <span class="params">(data []<span class="keyword">byte</span>)</span> <span class="params">(<span class="keyword">int</span>, error)</span></span>&#123;</span><br><span class="line">		n,err:==fmt.<span class="built_in">println</span>(<span class="keyword">string</span>(data))</span><br><span class="line">		<span class="keyword">return</span> n,err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="命名规则"><a href="#命名规则" class="headerlink" title="命名规则"></a>命名规则</h1><p>  to be cotinue…</p>
 <ul>
 <li>composing interfaces</li>
 <li>type conversion </li>
